@@ -101,7 +101,7 @@ TGp = CombinatorialTheory("NoK4m", _gen, _identify_hypergraph, edges=3)
 
 tp = TGp(3, ftype=[0, 1, 2], edges=[[0, 1, 2]])
 all_6 = TGp.generate_flags(6, tp)
-F = 1
+all_6_flags = []
 
 for f in all_6:
     # Re-label vertices to match type [0, 1, 2]
@@ -122,7 +122,7 @@ for f in all_6:
         
     # Re-labeled flag
     flag = TGp(6, ftype=[0, 1, 2], edges=edges)
-
+    
     # Only preserve flags that contain edge [3, 4, 5]
     if [3, 4, 5] not in flag.blocks()['edges']:
         continue
@@ -144,24 +144,76 @@ for f in all_6:
         else:
             states[i] = -1
 
+    all_6_flags.append([flag, states])
+
+T_3 = 1
+for flag, states in all_6_flags:
     # Add flags with coefficients
     if (len(set(states)) == 2 and -1 not in states) or len(set(states)) == 3:
         continue
     if states.count(-1) in [3, 2]:
-        F += flag / 9
+        T_3 += flag / 9
     elif states.count(-1) == 1:
-        F += flag / 3
+        T_3 += flag / 3
     else:
-        F += flag
-    # print()
+        T_3 += flag
     # print(flag)
     # print(states)
-F -= 1
+T_3 -= 1
+
+T_111 = 1
+for flag, states in all_6_flags:
+    if -1 not in states and len(set(states)) == 1:
+        continue
+    if states.count(-1) == 1 and len(set(states)) == 2:
+        continue
+    # Add flags with coefficients
+    if states.count(-1) == 2 and len(set(states)) == 2:
+        T_111 += flag * 2 / 9
+    elif states.count(-1) == 3:
+        T_111 += flag * 2 / 9
+    elif states.count(-1) == 1 and len(set(states)) == 3:
+        T_111 += flag / 3
+    else:
+        T_111 += flag
+    # print(flag)
+    # print(states)
+T_111 -= 1
+
+T_21 = 1
+for flag, states in all_6_flags:
+    if -1 not in states and len(set(states)) == 1:
+        continue
+    if -1 not in states and len(set(states)) == 3:
+        continue
+    # Add flags with coefficients
+    if -1 not in states and len(set(states)) == 2:
+        T_21 += flag
+    else:
+        T_21 += flag * 2 / 3
+    # print(flag)
+    # print(states)
+T_21 -= 1
 
 # Optimise
 degree = TGp(3, edges=[[0,1,2]], ftype=[0])
 p2f4 = TGp.generate_flags(4, TGp(2, ftype=[0, 1]))
 degree_difference = p2f4[2]-p2f4[3]+p2f4[5]-p2f4[6]
 positives = [degree-2/7, degree_difference, -degree_difference]
-ans = TGp.optimize_problem(F, 7, maximize=True, positives=positives)
-print(ans)
+
+# a_3 <= 0.02148518586113618
+# [T_3 - 0.0214]
+# ans = TGp.optimize_problem(T_3, 6, maximize=True, positives=positives)
+# print(ans)
+
+# a_111 >= 0.20655245288809151
+# ans = TGp.optimize_problem(T_111, 6, maximize=False, positives=positives)
+# print(ans)
+
+# a_21 >= 0.15849272791779434
+# ans = TGp.optimize_problem(T_21, 6, maximize=False, positives=positives)
+# print(ans)
+
+# (a_111 + a_21) / 2 >= 0.1995627514370104
+# ans = TGp.optimize_problem((T_111 + T_21) / 2, 6, maximize=False, positives=positives)
+# print(ans)
