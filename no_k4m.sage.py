@@ -100,13 +100,11 @@ TGp = CombinatorialTheory("NoK4m", _gen, _identify_hypergraph, edges=_sage_const
 # should be 11 106 8157
 # print(len(TGp.generate_flags(5)), len(TGp.generate_flags(6)), len(TGp.generate_flags(7)))
 
-
 #############################################################################################
 
 tp = TGp(_sage_const_3 , ftype=[_sage_const_0 , _sage_const_1 , _sage_const_2 ], edges=[[_sage_const_0 , _sage_const_1 , _sage_const_2 ]])
 all_6 = TGp.generate_flags(_sage_const_6 , tp)
 all_6_flags = []
-sum_of_all = _sage_const_1 
 
 for f in all_6:
     # Re-label vertices to match type [0, 1, 2]
@@ -127,7 +125,6 @@ for f in all_6:
         
     # Re-labeled flag
     flag = TGp(_sage_const_6 , ftype=[_sage_const_0 , _sage_const_1 , _sage_const_2 ], edges=edges)
-    sum_of_all += flag
     
     # Only preserve flags that contain edge [3, 4, 5]
     if [_sage_const_3 , _sage_const_4 , _sage_const_5 ] not in flag.blocks()['edges']:
@@ -152,7 +149,6 @@ for f in all_6:
 
     all_6_flags.append([flag, states])
 
-sum_of_all -= _sage_const_1 
 
 T_3 = _sage_const_1 
 T_21 = _sage_const_1 
@@ -180,8 +176,8 @@ T_3 -= _sage_const_1
 T_21 -= _sage_const_1 
 T_111 -= _sage_const_1 
 
-T = T_3 + T_111 + T_21
-Tp = T.project()
+# T = T_3 + T_111 + T_21
+# Tp = T.project()
 
 # Optimise
 degree = TGp(_sage_const_3 , edges=[[_sage_const_0 ,_sage_const_1 ,_sage_const_2 ]], ftype=[_sage_const_0 ])
@@ -194,16 +190,15 @@ positives = [degree-_sage_const_2 /_sage_const_7 , degree_difference, -degree_di
 # ans = TGp.optimize_problem(T_3, 6, maximize=True, positives=positives)
 # print(ans)
 
-# a_111 >= 0.20655245288809151
 # a_111 >= 0.06190003803946356
-# ans = TGp.optimize_problem(T_111, 6, maximize=False, positives=positives)
-# print(ans)
+ans = TGp.optimize_problem(T_111, _sage_const_6 , maximize=False, positives=positives)
+print(ans)
 
 # a_21 >= 0.15849272791779434
 # ans = TGp.optimize_problem(T_21, 6, maximize=False, positives=positives)
 # print(ans)
 
-# (a_111 + a_21) / 2 >= 0.1995627514370104
-ans = TGp.optimize_problem((T_111 + T_21) / _sage_const_2 , _sage_const_6 , maximize=False, positives=positives)
-print(ans)
+# (a_111 + a_21) / 2 >= 0.1321145487005117
+# ans = TGp.optimize_problem((T_111 + T_21) / 2, 6, maximize=False, positives=positives)
+# print(ans)
 
