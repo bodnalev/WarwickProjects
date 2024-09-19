@@ -106,6 +106,7 @@ TGp = CombinatorialTheory("NoK4m", _gen, _identify_hypergraph, edges=_sage_const
 tp = TGp(_sage_const_3 , ftype=[_sage_const_0 , _sage_const_1 , _sage_const_2 ], edges=[[_sage_const_0 , _sage_const_1 , _sage_const_2 ]])
 all_6 = TGp.generate_flags(_sage_const_6 , tp)
 all_6_flags = []
+sum_of_all = _sage_const_1 
 
 for f in all_6:
     # Re-label vertices to match type [0, 1, 2]
@@ -126,6 +127,7 @@ for f in all_6:
         
     # Re-labeled flag
     flag = TGp(_sage_const_6 , ftype=[_sage_const_0 , _sage_const_1 , _sage_const_2 ], edges=edges)
+    sum_of_all += flag
     
     # Only preserve flags that contain edge [3, 4, 5]
     if [_sage_const_3 , _sage_const_4 , _sage_const_5 ] not in flag.blocks()['edges']:
@@ -150,54 +152,36 @@ for f in all_6:
 
     all_6_flags.append([flag, states])
 
-T_3 = _sage_const_1 
-for flag, states in all_6_flags:
-    # Add flags with coefficients
-    if (len(set(states)) == _sage_const_2  and -_sage_const_1  not in states) or len(set(states)) == _sage_const_3 :
-        continue
-    if states.count(-_sage_const_1 ) in [_sage_const_3 , _sage_const_2 ]:
-        T_3 += flag / _sage_const_9 
-    elif states.count(-_sage_const_1 ) == _sage_const_1 :
-        T_3 += flag / _sage_const_3 
-    else:
-        T_3 += flag
-    # print(flag)
-    # print(states)
-T_3 -= _sage_const_1 
+sum_of_all -= _sage_const_1 
 
+T_3 = _sage_const_1 
+T_21 = _sage_const_1 
 T_111 = _sage_const_1 
 for flag, states in all_6_flags:
-    if -_sage_const_1  not in states and len(set(states)) == _sage_const_1 :
-        continue
-    if states.count(-_sage_const_1 ) == _sage_const_1  and len(set(states)) == _sage_const_2 :
-        continue
-    # Add flags with coefficients
-    if states.count(-_sage_const_1 ) == _sage_const_2  and len(set(states)) == _sage_const_2 :
+    if states.count(-_sage_const_1 ) == _sage_const_0 :
+        if len(set(states)) == _sage_const_2 :
+            T_21 += flag
+        elif len(set(states)) == _sage_const_3 :
+            T_111 += flag
+        elif len(set(states)) == _sage_const_1 :
+            T_3 += flag
+    elif states.count(-_sage_const_1 ) == _sage_const_1 :
+        if len(set(states)) == _sage_const_2 :
+            T_3 += flag / _sage_const_3 
+            T_21 += flag * _sage_const_2  / _sage_const_3 
+        elif len(set(states)) == _sage_const_3 :
+            T_21 += flag * _sage_const_2  / _sage_const_3 
+            T_111 += flag / _sage_const_3 
+    elif states.count(-_sage_const_1 ) in [_sage_const_2 , _sage_const_3 ]:
+        T_3 += flag / _sage_const_9 
+        T_21 += flag * _sage_const_2  / _sage_const_3 
         T_111 += flag * _sage_const_2  / _sage_const_9 
-    elif states.count(-_sage_const_1 ) == _sage_const_3 :
-        T_111 += flag * _sage_const_2  / _sage_const_9 
-    elif states.count(-_sage_const_1 ) == _sage_const_1  and len(set(states)) == _sage_const_3 :
-        T_111 += flag / _sage_const_3 
-    else:
-        T_111 += flag
-    # print(flag)
-    # print(states)
+T_3 -= _sage_const_1 
+T_21 -= _sage_const_1 
 T_111 -= _sage_const_1 
 
-T_21 = _sage_const_1 
-for flag, states in all_6_flags:
-    if -_sage_const_1  not in states and len(set(states)) == _sage_const_1 :
-        continue
-    if -_sage_const_1  not in states and len(set(states)) == _sage_const_3 :
-        continue
-    # Add flags with coefficients
-    if -_sage_const_1  not in states and len(set(states)) == _sage_const_2 :
-        T_21 += flag
-    else:
-        T_21 += flag * _sage_const_2  / _sage_const_3 
-    # print(flag)
-    # print(states)
-T_21 -= _sage_const_1 
+T = T_3 + T_111 + T_21
+Tp = T.project()
 
 # Optimise
 degree = TGp(_sage_const_3 , edges=[[_sage_const_0 ,_sage_const_1 ,_sage_const_2 ]], ftype=[_sage_const_0 ])
@@ -211,6 +195,7 @@ positives = [degree-_sage_const_2 /_sage_const_7 , degree_difference, -degree_di
 # print(ans)
 
 # a_111 >= 0.20655245288809151
+# a_111 >= 0.06190003803946356
 # ans = TGp.optimize_problem(T_111, 6, maximize=False, positives=positives)
 # print(ans)
 
