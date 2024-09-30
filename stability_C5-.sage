@@ -11,7 +11,6 @@ TT = CombinatorialTheory("12ColGraph", test_generate, test_identify, edges=2, C0
 # Exclude triangles 6.1.6 (1)
 f = TT.generate_flags(3)
 exclude = list(f[-6:])
-# TT.exclude()
 
 # Exclude disjoint edges 6.1.6 (3)
 # The edges share a vertex
@@ -19,7 +18,6 @@ avoid = [
     TT(3, edges=[[0, 2], [1, 2]], C0=[[0]], C1=[[1]], C2=[[2]]),
     TT(3, edges=[[0, 2], [1, 2]], C0=[[2]], C1=[[0]], C2=[[1]])
     ]
-# TT.exclude(avoid)
 exclude += avoid
 # The edges are vertex disjoint
 avoid = [
@@ -45,7 +43,6 @@ for ff in f:
         continue
     avoid.append(ff)
     # print(ff)
-# TT.exclude(avoid)
 exclude += avoid
 TT.exclude(exclude)
 
@@ -55,14 +52,13 @@ edge_01 = TT(2, edges=[[0, 1]], C0=[[0]], C1=[[1]], C2=[])
 
 point = TT(1, edges = [], C0 = [[0]], C1 = [], C2 = [])
 point2 = TT(1, edges = [], C0 = [], C1 = [[0]], C2 = [])
-positives = [edge_12 - edge_01, point - 1/3, point2 - 2/3]
+positives = [edge_12 - 1/2*edge_01, point - 1/3, point2 - 2/3]
 
 # Missing edges (correct?)
-M = 1 + edge_12 - 1
+M = 1 + TT(2, edges=[], C0=[], C1=[[0]], C2=[[1]]) - 1
 
 # Bad edges (correct?)
 B = 1
-# B += TT(2, edges=[[0, 1]], C0=[[0], [1]], C1=[], C2=[])
 B += TT(2, edges=[[0, 1]], C0=[[0]], C1=[[1]], C2=[])
 B += TT(2, edges=[[0, 1]], C0=[], C1=[[0], [1]], C2=[])
 B -= 1
@@ -70,5 +66,5 @@ B -= 1
 # print(M + B)
 
 # Optimize (correct?)
-x = TT.optimize(B - 1/2 * M, 5, maximize=True, positives = positives, certificate = True)
-print(x[1][:50])
+x = TT.optimize(B - M, 5, maximize=True, positives = positives)
+print(x)
