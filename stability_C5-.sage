@@ -14,40 +14,16 @@ TT.exclude(f[-6:])
 
 # Exclude disjoint edges 6.1.6 (3)
 # The edges share a vertex
-f = TT.generate_flags(3)
-avoid = []
-for ff in f:
-    if len(ff.blocks()['edges']) != 2:
-        continue
-    yep = True
-    for edge in ff.blocks()['edges']:
-        for i in range(0, 3):
-            if [edge[0]] in ff.blocks()['C'+str(i)] and [edge[1]] in ff.blocks()['C'+str(i)]:
-                yep = False
-    if not yep:
-        continue
-    if ff.blocks()['C0'] == [] or ff.blocks()['C1'] == [] or ff.blocks()['C2'] == []:
-        continue
-    avoid.append(ff)
+avoid = [
+    TT(3, edges=[[0, 2], [1, 2]], C0=[[0]], C1=[[1]], C2=[[2]]),
+    TT(3, edges=[[0, 2], [1, 2]], C0=[[2]], C1=[[0]], C2=[[1]])
+    ]
 TT.exclude(avoid)
 # The edges are vertex disjoint
-f = TT.generate_flags(4)
-avoid = []
-for ff in f:
-    if len(ff.blocks()['edges']) != 2:
-        continue
-    yep = True
-    for edge in ff.blocks()['edges']:
-        for i in range(0, 3):
-            if [edge[0]] in ff.blocks()['C'+str(i)] and [edge[1]] in ff.blocks()['C'+str(i)]:
-                yep = False
-    if not yep:
-        continue
-    if ff.blocks()['C0'] == [] or ff.blocks()['C1'] == [] or ff.blocks()['C2'] == []:
-        continue
-    if ff.blocks()['edges'] != [[0, 2], [1, 3]]:
-        continue
-    avoid.append(ff)
+avoid = [
+    TT(4, edges=[[0, 2], [1, 3]], C0=[[0], [1]], C1=[[2]], C2=[[3]]),
+    TT(4, edges=[[0, 2], [1, 3]], C0=[[0]], C1=[[1], [2]], C2=[[3]])
+    ]
 TT.exclude(avoid)
 
 # Exclude special paths 6.1.6 (2)
@@ -65,22 +41,25 @@ for ff in f:
     if ff.blocks()['C0'] == [] or ff.blocks()['C1'] == [] or ff.blocks()['C2'] == []:
         continue
     avoid.append(ff)
+    # print(ff)
 TT.exclude(avoid)
 
 # Assumptions
-edge_12 = TT.generate_flags(2)[-1]
-edge_01 = TT.generate_flags(2)[5]
+edge_12 = TT(2, edges=[[0, 1]], C0=[], C1=[[0]], C2=[[1]])
+edge_01 = TT(2, edges=[[0, 1]], C0=[[0]], C1=[[1]], C2=[])
 positives = [edge_12 - edge_01]
 
 # Missing edges (correct?)
 M = 1 + edge_12 - 1
 
 # Bad edges (correct?)
-f = TT.generate_flags(2)[-4:-1]
 B = 1
-for ff in f:
-    B += ff
+B += TT(2, edges=[[0, 1]], C0=[[0], [1]], C1=[], C2=[])
+B += TT(2, edges=[[0, 1]], C0=[[0]], C1=[[1]], C2=[])
+B += TT(2, edges=[[0, 1]], C0=[], C1=[[0], [1]], C2=[])
 B -= 1
+
+# print(M + B)
 
 # Optimize (correct?)
 x = TT.optimize(B - M, 5, maximize=False, positives=positives)

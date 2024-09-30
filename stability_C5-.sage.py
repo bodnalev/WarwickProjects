@@ -14,47 +14,25 @@ def test_generate(n):
 
 TT = CombinatorialTheory("12ColGraph", test_generate, test_identify, edges=_sage_const_2 , C0=_sage_const_1 , C1=_sage_const_1 , C2=_sage_const_1 )
 
-# Exclude triangles inside parts
+# Exclude triangles 6.1.6 (1)
 f = TT.generate_flags(_sage_const_3 )
 TT.exclude(f[-_sage_const_6 :])
 
-# Exclude disjoint edges
-f = TT.generate_flags(_sage_const_3 )
-avoid = []
-for ff in f:
-    if len(ff.blocks()['edges']) != _sage_const_2 :
-        continue
-    yep = True
-    for edge in ff.blocks()['edges']:
-        for i in range(_sage_const_0 , _sage_const_3 ):
-            if [edge[_sage_const_0 ]] in ff.blocks()['C'+str(i)] and [edge[_sage_const_1 ]] in ff.blocks()['C'+str(i)]:
-                yep = False
-    if not yep:
-        continue
-    if ff.blocks()['C0'] == [] or ff.blocks()['C1'] == [] or ff.blocks()['C2'] == []:
-        continue
-    avoid.append(ff)
+# Exclude disjoint edges 6.1.6 (3)
+# The edges share a vertex
+avoid = [
+    TT(_sage_const_3 , edges=[[_sage_const_0 , _sage_const_2 ], [_sage_const_1 , _sage_const_2 ]], C0=[[_sage_const_0 ]], C1=[[_sage_const_1 ]], C2=[[_sage_const_2 ]]),
+    TT(_sage_const_3 , edges=[[_sage_const_0 , _sage_const_2 ], [_sage_const_1 , _sage_const_2 ]], C0=[[_sage_const_2 ]], C1=[[_sage_const_0 ]], C2=[[_sage_const_1 ]])
+    ]
 TT.exclude(avoid)
-f = TT.generate_flags(_sage_const_4 )
-avoid = []
-for ff in f:
-    if len(ff.blocks()['edges']) != _sage_const_2 :
-        continue
-    yep = True
-    for edge in ff.blocks()['edges']:
-        for i in range(_sage_const_0 , _sage_const_3 ):
-            if [edge[_sage_const_0 ]] in ff.blocks()['C'+str(i)] and [edge[_sage_const_1 ]] in ff.blocks()['C'+str(i)]:
-                yep = False
-    if not yep:
-        continue
-    if ff.blocks()['C0'] == [] or ff.blocks()['C1'] == [] or ff.blocks()['C2'] == []:
-        continue
-    if ff.blocks()['edges'] != [[_sage_const_0 , _sage_const_2 ], [_sage_const_1 , _sage_const_3 ]]:
-        continue
-    avoid.append(ff)
+# The edges are vertex disjoint
+avoid = [
+    TT(_sage_const_4 , edges=[[_sage_const_0 , _sage_const_2 ], [_sage_const_1 , _sage_const_3 ]], C0=[[_sage_const_0 ], [_sage_const_1 ]], C1=[[_sage_const_2 ]], C2=[[_sage_const_3 ]]),
+    TT(_sage_const_4 , edges=[[_sage_const_0 , _sage_const_2 ], [_sage_const_1 , _sage_const_3 ]], C0=[[_sage_const_0 ]], C1=[[_sage_const_1 ], [_sage_const_2 ]], C2=[[_sage_const_3 ]])
+    ]
 TT.exclude(avoid)
 
-# Exclude special paths
+# Exclude special paths 6.1.6 (2)
 f = TT.generate_flags(_sage_const_4 )
 avoid = []
 for ff in f:
@@ -69,24 +47,27 @@ for ff in f:
     if ff.blocks()['C0'] == [] or ff.blocks()['C1'] == [] or ff.blocks()['C2'] == []:
         continue
     avoid.append(ff)
+    # print(ff)
 TT.exclude(avoid)
 
 # Assumptions
-edge_12 = TT.generate_flags(_sage_const_2 )[-_sage_const_1 ]
-edge_01 = TT.generate_flags(_sage_const_2 )[_sage_const_5 ]
+edge_12 = TT(_sage_const_2 , edges=[[_sage_const_0 , _sage_const_1 ]], C0=[], C1=[[_sage_const_0 ]], C2=[[_sage_const_1 ]])
+edge_01 = TT(_sage_const_2 , edges=[[_sage_const_0 , _sage_const_1 ]], C0=[[_sage_const_0 ]], C1=[[_sage_const_1 ]], C2=[])
 positives = [edge_12 - edge_01]
 
-# Missing edges
+# Missing edges (correct?)
 M = _sage_const_1  + edge_12 - _sage_const_1 
 
-# Bad edges
-f = TT.generate_flags(_sage_const_2 )[-_sage_const_4 :-_sage_const_1 ]
+# Bad edges (correct?)
 B = _sage_const_1 
-for ff in f:
-    B += ff
+B += TT(_sage_const_2 , edges=[[_sage_const_0 , _sage_const_1 ]], C0=[[_sage_const_0 ], [_sage_const_1 ]], C1=[], C2=[])
+B += TT(_sage_const_2 , edges=[[_sage_const_0 , _sage_const_1 ]], C0=[[_sage_const_0 ]], C1=[[_sage_const_1 ]], C2=[])
+B += TT(_sage_const_2 , edges=[[_sage_const_0 , _sage_const_1 ]], C0=[], C1=[[_sage_const_0 ], [_sage_const_1 ]], C2=[])
 B -= _sage_const_1 
 
-# Optimize
-x = TT.optimize(B - M, _sage_const_6 , maximize=False, positives=positives)
+# print(M + B)
+
+# Optimize (correct?)
+x = TT.optimize(B - M, _sage_const_5 , maximize=False, positives=positives)
 print(x)
 
