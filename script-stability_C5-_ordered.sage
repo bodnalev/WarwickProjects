@@ -38,6 +38,9 @@ exclude = [flag for flag in TT.generate_flags(4) if flag not in feasibles]
 TT.exclude(exclude)
 
 # Assumptions
+edge_00 = TT(2, edges=[[0, 1]], C0=[[0], [1]], C1=[], C2=[])
+edge_11 = TT(2, edges=[[0, 1]], C0=[], C1=[[0], [1]], C2=[])
+edge_22 = TT(2, edges=[[0, 1]], C0=[], C1=[], C2=[[0], [1]])
 edge_01 = TT(2, edges=[[0, 1]], C0=[[0]], C1=[[1]], C2=[])
 edge_12 = TT(2, edges=[[0, 1]], C0=[], C1=[[0]], C2=[[1]])
 edge_02 = TT(2, edges=[[0, 1]], C0=[[0]], C1=[], C2=[[1]])
@@ -45,6 +48,15 @@ point0 = TT(1, edges = [], C0 = [[0]], C1 = [], C2 = [])
 point1 = TT(1, edges = [], C0 = [], C1 = [[0]], C2 = [])
 point2 = TT(1, edges = [], C0 = [], C1 = [], C2 = [[0]])
 positives = [edge_12 - edge_01, edge_12 - edge_02, point0 - 1/3, point1 - 1/3, point2 - 1/3]
+
+# # forall i, d(v_i) <= 1/4
+positives += [1/36 - edge_00, 1/36 - edge_11, 1/36 -  edge_22]
+
+# # d(v) >= 1 / 4
+positives += [edge_00 + edge_11 + edge_22 + edge_01 + edge_12 + edge_02 - 1/4]
+
+# Third
+positives += [edge_12 - 1/100]
 
 # Missing edges
 M = 1 + TT(2, edges=[], C0=[], C1=[[0]], C2=[[1]]) - 1
