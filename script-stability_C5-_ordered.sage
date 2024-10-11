@@ -70,9 +70,9 @@ B += TT(2, edges=[[0, 1]], C0=[], C1=[], C2=[[0], [1]])
 B -= 1
 
 # Optimize
-# const = TT.blowup_construction(5, 3, edges=[[1, 2]], C0=[[0]], C1=[[1]], C2=[[2]])
-# x = TT.optimize(B - M, 5, maximize=True, positives = positives, exact=True, construction=const)
-# print(x)
-
-x = TT.optimize(B - M, 5, maximize=True, positives = positives)
+const = TT.blowup_construction(5, 3, edges=[[1, 2]], C0=[[0]], C1=[[1]], C2=[[2]])
+x = TT.optimize(B - M, 5, maximize=True, positives = positives, exact=True, construction=const)
 print(x)
+
+# x = TT.optimize(B - M, 5, maximize=True, positives = positives)
+# print(x)

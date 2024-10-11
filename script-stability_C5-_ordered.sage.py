@@ -76,10 +76,10 @@ B += TT(_sage_const_2 , edges=[[_sage_const_0 , _sage_const_1 ]], C0=[], C1=[], 
 B -= _sage_const_1 
 
 # Optimize
-# const = TT.blowup_construction(5, 3, edges=[[1, 2]], C0=[[0]], C1=[[1]], C2=[[2]])
-# x = TT.optimize(B - M, 5, maximize=True, positives = positives, exact=True, construction=const)
-# print(x)
-
-x = TT.optimize(B - M, _sage_const_5 , maximize=True, positives = positives)
+const = TT.blowup_construction(_sage_const_5 , _sage_const_3 , edges=[[_sage_const_1 , _sage_const_2 ]], C0=[[_sage_const_0 ]], C1=[[_sage_const_1 ]], C2=[[_sage_const_2 ]])
+x = TT.optimize(B - M, _sage_const_5 , maximize=True, positives = positives, exact=True, construction=const)
 print(x)
+
+# x = TT.optimize(B - M, 5, maximize=True, positives = positives)
+# print(x)
 
