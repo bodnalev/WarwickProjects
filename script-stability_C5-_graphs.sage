@@ -8,7 +8,7 @@ def test_identify(n, ftype_points, edges, C0, C1, C2):
 def test_generate(n):
     return colored_generate(2, [[0], [1], [2]], n)
 
-TT = CombinatorialTheory("test_theory", test_generate, test_identify, edges=2, C0=1, C1=1, C2=1)
+TT = CombinatorialTheory("123_graph_link_no_C5-", test_generate, test_identify, edges=2, C0=1, C1=1, C2=1)
 
 def get_more_edges(n, edges):
     edge = edges.copy()
@@ -165,9 +165,4 @@ B += TT(2, edges=[[0, 1]], C0=[], C1=[], C2=[[0], [1]])
 B -= 1
 
 # Optimize
-const = TT.blowup_construction(5, 3, edges=[[1, 2]], C0=[[0]], C1=[[1]], C2=[[2]])
-x = TT.optimize(B - M*9/10, 5, maximize=True, positives = positives, exact=True)
-print(x)
-
-# x = TT.optimize(B - M, 5, maximize=True, positives = positives)
-# print(x)
+TT.optimize(B - M*9/10, 5, maximize=True, positives = positives, exact=True)
