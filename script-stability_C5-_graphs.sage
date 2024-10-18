@@ -21,33 +21,6 @@ def get_more_edges(n, edges):
     return gg
 
 exclude = []
-# # Condition 1 (path)
-# for flag in TT.generate_flags(4):
-#     # Make sure it has 3 edges
-#     if len(flag.blocks()['edges']) != 3:
-#         continue
-#     # Make sure it intersects all three parts
-#     if flag.blocks()['C0'] == [] or flag.blocks()['C1'] == [] or flag.blocks()['C2'] == []:
-#         continue
-#     # Get the degree sequence and make sure it is 1, 1, 2, 2
-#     seq = [0, 0, 0, 0]
-#     for e in flag.blocks()['edges']:
-#         seq[e[0]] += 1
-#         seq[e[1]] += 1
-#     if sorted(seq) != [1, 1, 2, 2]:
-#         continue
-#     # Check that the endpoints are in different parts
-#     eq_ends = False
-#     for i in range(4):
-#         for j in range(i + 1, 4):
-#             if seq[i] == seq[j] == 1 and (([i] in flag.blocks()['C0'] and [j] in flag.blocks()['C0']) or ([i] in flag.blocks()['C1'] and [j] in flag.blocks()['C1']) or ([i] in flag.blocks()['C2'] and [j] in flag.blocks()['C2'])):
-#                 eq_ends = True
-#     if eq_ends:
-#         continue
-#     # print(flag)
-#     exclude.append(flag)
-# print(len(exclude), "non-induced subgraphs to exclude")
-
 # Condition 2.1 (two disjoint edges)
 for flag in TT.generate_flags(4):
     # Make sure it has 2 edges
@@ -148,61 +121,6 @@ for flag in TT.generate_flags(3):
     exclude.append(flag)
 print(len(exclude), "non-induced subgraphs to exclude")
 
-# # Condition 3 (two edges)
-# for flag in TT.generate_flags(4):
-#     # Make sure it has 2 edges
-#     if len(flag.blocks()['edges']) != 2:
-#         continue
-#     # Make sure it intersects all three parts
-#     if flag.blocks()['C0'] == [] or flag.blocks()['C1'] == [] or flag.blocks()['C2'] == []:
-#         continue
-#     # Get the degree sequence and make sure it is 0, 1, 1, 2
-#     v = 0
-#     u = 0
-#     seq = [0, 0, 0, 0]
-#     for e in flag.blocks()['edges']:
-#         seq[e[0]] += 1
-#         seq[e[1]] += 1
-#         if seq[e[0]] == 2:
-#             v = e[0]
-#         elif seq[e[1]] == 2:
-#             v = e[1]
-#         if seq[e[0]] == 0:
-#             u = e[0]
-#         elif seq[e[1]] == 0:
-#             u = e[1]
-#     if sorted(seq) != [0, 1, 1, 2]:
-#         continue
-#     # Make sure the degree 0 vertex is the only in its part
-#     lonely = False
-#     for i in range(3):
-#         if flag.blocks()['C'+str(i)] == [[u]]:
-#             lonely = True
-#     if not lonely:
-#         continue
-#     # Make sure the degree 2 vertex is not the only in its part
-#     lonely = False
-#     for i in range(3):
-#         if flag.blocks()['C'+str(i)] == [[v]]:
-#             lonely = True
-#     if lonely:
-#         continue
-#     # print(flag)
-#     exclude.append(flag)
-# print(len(exclude), "non-induced subgraphs to exclude")
-
-# # Condition 4 (rainbow triangle)
-# for flag in TT.generate_flags(3):
-#     # Make sure it has 2 edges
-#     if len(flag.blocks()['edges']) != 3:
-#         continue
-#     # Make sure it intersects all three parts
-#     if flag.blocks()['C0'] == [] or flag.blocks()['C1'] == [] or flag.blocks()['C2'] == []:
-#         continue
-#     # print(flag)
-#     exclude.append(flag)
-# print(len(exclude), "non-induced subgraphs to exclude")
-
 # Get complete list of induced graphs to exclude
 complete_excluded_list = []
 for flag in exclude:
@@ -232,20 +150,8 @@ point0 = TT(1, edges = [], C0 = [[0]], C1 = [], C2 = [])
 point1 = TT(1, edges = [], C0 = [], C1 = [[0]], C2 = [])
 point2 = TT(1, edges = [], C0 = [], C1 = [], C2 = [[0]])
 positives = [edge_12 - edge_01, edge_12 - edge_02]
-
-# Balanced partition
 positives += [point0 - 1/4, point1 - 1/4, point2 - 1/4]
-
 positives += [edge_01 + edge_02 + edge_12 - 1/8]
-
-# # # # forall i, d(v_i) <= 1/4
-# positives += [1/36 - edge_00, 1/36 - edge_11, 1/36 -  edge_22]
-
-# # # # d(v) >= 1 / 4
-# positives += [edge_00 + edge_11 + edge_22 + edge_01 + edge_12 + edge_02 - 1/4]
-
-# # # Third
-# positives += [edge_12 - 1/100]
 
 # # Missing edges
 M = 1 + TT(2, edges=[], C0=[], C1=[[0]], C2=[[1]]) - 1
@@ -258,7 +164,7 @@ B += TT(2, edges=[[0, 1]], C0=[], C1=[[0], [1]], C2=[])
 B += TT(2, edges=[[0, 1]], C0=[], C1=[], C2=[[0], [1]])
 B -= 1
 
-# # Optimize
+# Optimize
 const = TT.blowup_construction(5, 3, edges=[[1, 2]], C0=[[0]], C1=[[1]], C2=[[2]])
 x = TT.optimize(B - M*9/10, 5, maximize=True, positives = positives, exact=True)
 print(x)
